@@ -1,0 +1,9 @@
+# Logs
+
+# Compiled binary addons (http://nodejs.org/api/addons.html)
+build/
+server/www
+
+# Dependency directories
+node_modules/
+
