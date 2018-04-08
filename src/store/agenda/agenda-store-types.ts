@@ -1,0 +1,6 @@
+export const FETCH_AGENDAS = 'agendas/FETCH_AGENDAS'
+export const SET_AGENDAS = 'agendas/SET_AGENDAS'
+export const GET_AGENDAS = 'agendas/GET_AGENDAS'
+export const ADD_AGENDA = 'agendas/ADD_AGENDA'
+export const UPDATE_AGENDA = 'agendas/UPDATE_AGENDA'
+export const DELETE_AGENDA = 'agendas/DELETE_AGENDA'

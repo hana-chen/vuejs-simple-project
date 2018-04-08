@@ -1,0 +1,22 @@
+[
+    {
+      "id": "101",
+      "firstName": "Van A",
+      "lastName": "Nguyen",
+      "username": "name1",
+      "password": "123456",
+      "email": "name1@omnicasa.com",
+      "address": "01 Phan Thuc Duyet street, Tan Binh dist.",
+      "phoneNumber": "012212124566"
+    },
+    {
+      "id": "102",
+      "firstName": "La",
+      "lastName": "La",
+      "username": "lala",
+      "password": "123456",
+      "email": "lala@omnicasa.com",
+      "address": "01 Bach Dang street, Tan Binh dist.",
+      "phoneNumber": "012212124566"
+    }
+  ]
