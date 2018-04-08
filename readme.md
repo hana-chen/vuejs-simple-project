@@ -3,10 +3,10 @@
 * **Steps to run project**
 1. Clone repository on your local machine, open command console window, navigate to project folder
 2. Follow command below to install and run server and client side: 
-npm i  (Wait for npm install packages)
-npm run build
-npm start (start server side)
-npm run dev (start client side)
+* npm i  (Wait for npm install packages)
+* npm run build
+* npm start (start server side)
+* npm run dev (start client side)
 
 Brief description about demo:
 A small project with some features below:
