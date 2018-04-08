@@ -1,7 +1,15 @@
 # Sample Project
-* **Check over your branch and create if it is not existed**
+* **A sample project to perform vue, vuex**
+* **Steps to run project**
+1. Clone repository on your local machine, open command console window, navigate to project folder
+2. Follow command below to install and run server and client side: 
+npm i  (Wait for npm install packages)
+npm run build
+npm start (start server side)
+npm run dev (start client side)
+
 Brief description about demo:
-Making a small project with some features below:
+A small project with some features below:
 * **Language and libs**
 
 1. Vue
@@ -36,7 +44,7 @@ bootstrap
 * **bootstrap**
 
 ### Features:
-This demo must have 2 main pages
+This demo includes 2 main pages
 #### 1. User
 + Get list of user and display as table:
 
@@ -46,10 +54,8 @@ The modal of user has some fields personal information:
 + First name
 + Last name
 + Email
-+ Username
-+ Password
 + Phone number
-+ Address....
++ Address
 #### 2. Agenda
 
 Init calendar use fullcalendar library.
@@ -65,4 +71,3 @@ The modal includes some field:
 + Description
 + Appointment place: Using google map autocomplete
 + A map display a marker on map to show the place where the appointment is. When click on marker, the info window will be display to show exact appointment address on the map
-Note: When you research: Please create sub-task to comment the result (output) of your researching.
