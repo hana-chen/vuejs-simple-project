@@ -5,8 +5,8 @@ module.exports = [
       description: 'Report daily each morning meeting',
       start: '2018-04-06T04:56:24Z',
       end: '2018-04-06T04:56:24Z',
-      appointmentPlaceX: '45.508',
-      appointmentPlaceY: '-73.587',
+      appointmentPlaceX: 40.783,
+      appointmentPlaceY: -73.971,
       appointmentPlace: 'Mahattan',
     },
     {
@@ -15,8 +15,8 @@ module.exports = [
       description: 'Report daily each morning meeting',
       start: '2018-04-08T04:56:24Z',
       end: '2018-04-08T04:56:24Z',
-      appointmentPlaceX: '45.508',
-      appointmentPlaceY: '-73.587',
+      appointmentPlaceX: -33.868,
+      appointmentPlaceY: 151.209,
       appointmentPlace: 'Sydney NSW, Australia',
     },
     {
@@ -25,8 +25,8 @@ module.exports = [
       description: 'Report daily each morning meeting',
       start: '2018-04-01T04:56:24Z',
       end: '2018-04-01T04:56:24Z',
-      appointmentPlaceX: '45.508',
-      appointmentPlaceY: '-73.587',
+      appointmentPlaceX: -33.873,
+      appointmentPlaceY: 151.192,
       appointmentPlace: 'Sydney Fish Market, Bank Street, Pyrmont NSW, Australia',
     }
   ]
