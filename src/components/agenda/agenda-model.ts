@@ -5,8 +5,8 @@ export class Agenda {
     title: string;
     description: string;
     appointmentPlaceX: string;
-    appointmentPlaceY: string;
-    appointmentPlace: string;    
+    appointmentPlaceY: number;
+    appointmentPlace: number;    
     constructor(){        
     }
 }
