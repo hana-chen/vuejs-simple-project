@@ -71,6 +71,11 @@ export default class AgendaDetail extends Vue {
                 lat: this.editingAgenda.appointmentPlaceX,
                 lng: this.editingAgenda.appointmentPlaceY
             }
+            const marker = {
+                lat: this.editingAgenda.appointmentPlaceX,
+                lng: this.editingAgenda.appointmentPlaceY
+            }
+            this.markers.push({ position: marker });
         }else{
             this.center = {
                 lat: 45.508,
@@ -114,16 +119,6 @@ export default class AgendaDetail extends Vue {
         this.showModal = false;
     }
 
-    initPlace(){
-        if(this.editingAgenda){
-            const marker = {
-                lat: this.editingAgenda.appointmentPlaceX,
-                lng: this.editingAgenda.appointmentPlaceY
-            }
-            this.markers.push()
-        }
-    }
-
     setPlace(place) {    
       this.currentPlace = place;
       if(this.editingAgenda){
@@ -131,6 +126,7 @@ export default class AgendaDetail extends Vue {
         this.editingAgenda.appointmentPlaceX = place.geometry.location.lat();
         this.editingAgenda.appointmentPlaceY = place.geometry.location.lng();
       }
+      this.markers = [];
       this.addMarker();
     }
 
