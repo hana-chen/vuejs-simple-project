@@ -1,5 +1,5 @@
 <template>
-  <div>    
+  <div class="container">    
     <div class="button-group text-right">
       <button @click="getListOfUsers">Refresh</button>
       <button @click="enableAddMode" v-if="!addingUser && !selectedUser">Add user</button>

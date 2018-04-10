@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div>      
+    <div class="container">      
       <div class="button-group text-right">
         <button @click="getListOfAgendas">Refresh</button>
         <button @click="enableAddMode" v-if="!addingAgenda && !selectedAgenda">Add new event</button>
