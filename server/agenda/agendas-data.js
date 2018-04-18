@@ -8,6 +8,8 @@ module.exports = [
       appointmentPlaceX: 40.783,
       appointmentPlaceY: -73.971,
       appointmentPlace: 'Mahattan',
+      userId: 111,
+      userFullName: 'La La'
     },
     {
       id: 112,
@@ -18,6 +20,8 @@ module.exports = [
       appointmentPlaceX: -33.868,
       appointmentPlaceY: 151.209,
       appointmentPlace: 'Sydney NSW, Australia',
+      userId: 111,
+      userFullName: 'La La'
     },
     {
       id: 113,
@@ -28,5 +32,7 @@ module.exports = [
       appointmentPlaceX: -33.873,
       appointmentPlaceY: 151.192,
       appointmentPlace: 'Sydney Fish Market, Bank Street, Pyrmont NSW, Australia',
+      userId: 111,
+      userFullName: 'La La'
     }
   ]

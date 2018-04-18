@@ -16,6 +16,8 @@ exports.putAgenda = (req, res) => {
       appointmentPlace: req.body.agenda.appointmentPlace,
       appointmentPlaceX: req.body.agenda.appointmentPlaceX,
       appointmentPlaceY: req.body.agenda.appointmentPlaceY,
+      userId: req.body.agenda.userId,
+      userFullName: req.body.agenda.userFullName,
     };
     var index = agendas.findIndex(u => u.id === originalAgenda.id);    
     var agenda = agendas.find(u => u.id === originalAgenda.id);    
@@ -29,6 +31,8 @@ exports.putAgenda = (req, res) => {
       agenda.appointmentPlace = originalAgenda.appointmentPlace;
       agenda.appointmentPlaceX = originalAgenda.appointmentPlaceX;
       agenda.appointmentPlaceY = originalAgenda.appointmentPlaceY;
+      agenda.userId = req.body.agenda.userId;
+      agenda.userFullName = req.body.agenda.userFullName;
       res.status(200).json(agendas);        
       console.log('Agenda updated successfully!');
     }  
@@ -45,6 +49,8 @@ exports.postAgenda = (req, res) => {
     appointmentPlace: req.body.agenda.appointmentPlace,
     appointmentPlaceX: req.body.agenda.appointmentPlaceX,
     appointmentPlaceY: req.body.agenda.appointmentPlaceY,
+    userId: req.body.agenda.userId,
+    userFullName: req.body.agenda.userFullName
   };
   agendas.push(originalAgenda);
   res.status(201).json(agendas);  

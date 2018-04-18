@@ -7,8 +7,6 @@ export class User {
     password: string;
     phoneNumber: string;
     address: string;
-    // name: string;
-    // saying: string;
     constructor(){        
     }
 }

@@ -20,6 +20,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component } from 'vue-property-decorator';
+import elementUI from 'element-ui'
+
+Vue.use(elementUI)
 
 @Component({})
 export default class App extends Vue {
@@ -152,4 +155,57 @@ nav li.active {
    list-style-type: none;
    padding-left: 30px;
  }
+
+ .fc-event-container {
+  padding: 2px !important;
+}
+
+.fc-event {
+  padding: 5px 8px;
+  border-color: #ddd;
+  background: #DAF8FB !important;
+
+  .fc-content {
+    color: #444;
+  }
+
+  h4,
+  h5 {
+    margin: 0;
+    font-weight: normal;
+  }
+
+  h4 {
+    color: #666;
+    font-size: 13px;
+    line-height: 18px;
+    white-space: normal;
+  }
+
+  h5 {
+    color: #888;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+
+  .guest-count {
+    margin: 5px 0;
+  }
+
+  p[class^="type-"] {
+    margin: 0;
+  }
+
+  p[class="type-Corporate"] {
+    color: red;
+  }
+
+  p[class="type-Wedding"] {
+    color: green;
+  }
+
+  p[class="type-Birthday"] {
+    color: blue;
+  }
+}
 </style>

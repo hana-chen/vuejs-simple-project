@@ -6,15 +6,20 @@
         </el-form-item>
         <el-form-item label="Title">
             <el-input v-model="editingAgenda.title" ref="title" @keyup.enter="save"></el-input>
+        </el-form-item>      
+        <el-form-item label="Owners">
+            <el-select v-model="editingAgenda.userId">
+                <el-option v-for="item in users" :key="item.id" :value="item.firstName"></el-option>
+            </el-select>
         </el-form-item>
         <el-form-item label="Description">
             <el-input type="textarea" v-model="editingAgenda.description" @keyup.enter="save"></el-input>
         </el-form-item>
         <el-form-item label="Start time">
-            <el-date-picker type="datetime" placeholder="Pick a date" v-model="editingAgenda.start" style="width: 100%;" @keyup.enter="save"></el-date-picker>
+            <el-date-picker type="datetime" format="yyyy/MM/dd hh:mm A" value-format="yyyy-MM-dd hh:mm A" default-time="12:00:00" placeholder="Pick a date" v-model="editingAgenda.start" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="End time">
-            <el-date-picker type="datetime" placeholder="Pick a date" v-model="editingAgenda.end" style="width: 100%;" @keyup.enter="save"></el-date-picker>
+            <el-date-picker type="datetime" format="yyyy/MM/dd hh:mm A" value-format="yyyy-MM-dd hh:mm A" default-time="12:00:00" placeholder="Pick a date" v-model="editingAgenda.end" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="Appointment place">            
             <gmap-autocomplete class="el-input__inner" @place_changed="setPlace" v-model="editingAgenda.appointmentPlace"></gmap-autocomplete>         
@@ -40,18 +45,20 @@
 import Vue from 'vue';
 import { Component, Prop, Watch, Emit } from 'vue-property-decorator';
 import { Agenda } from './agenda-model';
-import elementUI from 'element-ui'
+import * as userTypes from '../../store/user/user-store-types'
+import { User } from '../user/user-model'
 import { Getter, Mutation, Action } from 'vuex-class'
 import { AxiosResponse } from 'axios';
-
-Vue.use(elementUI)
+import moment from 'moment'
 
 @Component({})
 export default class AgendaDetail extends Vue {
     @Prop({default: null}) agendaModel: Agenda | null;
+    @Prop({default: false}) addingAgenda;
 
+    @Getter(userTypes.GET_USERS) users: User[];
     showModal: boolean;
-    addingAgenda = !this.agendaModel;
+    //addingAgenda = !this.agendaModel;
     editingAgenda: Agenda | null = null;
 
     //google map
@@ -59,14 +66,16 @@ export default class AgendaDetail extends Vue {
     markers: any [];
     places: any [];
     currentPlace: any;
+    startDay: any;
+    endDay: any;
 
     created() {
-        this.editingAgenda = this.cloneIt();
+        this.editingAgenda = this.cloneIt();        
         this.showModal = true;
         this.markers = [];
         this.places = [];
         this.currentPlace = null;
-        if(this.editingAgenda){
+        if(!this.addingAgenda && this.editingAgenda){            
             this.center = {
                 lat: this.editingAgenda.appointmentPlaceX,
                 lng: this.editingAgenda.appointmentPlaceY
@@ -82,6 +91,7 @@ export default class AgendaDetail extends Vue {
                 lng: -73.587
             }
         }
+        console.log(this.editingAgenda);
     }
     mouted(){
         this.geolocate();
@@ -92,9 +102,9 @@ export default class AgendaDetail extends Vue {
 
     save() {
         if (this.addingAgenda) {
-        this.addAgenda();
+            this.addAgenda();
         } else {
-        this.updateAgenda();
+            this.updateAgenda();
         }
     }
     
