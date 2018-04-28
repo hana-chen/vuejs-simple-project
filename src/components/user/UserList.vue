@@ -73,8 +73,24 @@ export default class UserList extends Vue {
     return this.users;
   }
 
-  deleteUser(user: User) {    
-    this.storeDeleteUser(user);    
+  deleteUser(user: User) {
+    this.$confirm(`Are you sure you want to delete user ${user.firstName + ' ' + user.lastName}?`, 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {          
+          this.storeDeleteUser(user).then(() => 
+            this.$message({
+              type: 'success',
+              message: 'Delete user completed'
+            })
+          )
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Delete user canceled'
+          });          
+        });
   }
   
   enableAddMode() {
@@ -105,120 +121,5 @@ export default class UserList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  width: 300px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-
-// .button-group {
-//   margin: 0.5em;
-// }
-// button.delete-button {
-//   background-color: rgb(216, 59, 1);
-//   color: white;
-//   padding: 4px;
-//   position: relative;
-//   font-size: 12px;
-//   max-width: 50px;
-// }
-// .selected {
-//   background-color: rgb(0, 120, 215) !important;
-//   color: white;
-// }
-// .users {
-//   float: left;
-//   margin: 0 0 2em 0;
-//   list-style-type: none;
-//   padding: 0;
-//   width: 20em;
-//   li {
-//     cursor: pointer;
-//     position: relative;
-//     background-color: #f7f7f7;
-//     margin: 0.5em;
-//     height: 3.2em;
-//     border-radius: 4px;
-//     &:hover {
-//       color: #607d8b;
-//       color: rgb(0, 120, 215);
-//       background-color: #ddd;
-//       left: 1px;
-//     }
-//     &.selected:hover {
-//       color: white;
-//     }
-//   }
-//   .text {
-//     position: relative;
-//     top: -3px;
-//   }
-//   .saying {
-//     margin: 5px 2.3px;
-//   }
-//   .name {
-//     font-weight: bold;
-//   }
-//   .user-container {
-//     display: flex;
-//     flex-flow: row wrap;
-//   }
-//   > * {
-//     flex: 1 100%;
-//   }
-//   .user-element {
-//     display: flex;
-//     flex-flow: row wrap;
-//     flex: 18 auto;
-//     order: 1;
-//     padding: 0;
-//     margin: 0;
-//   }
-//   .delete-button {
-//     flex: 1 auto;
-//     order: 2;
-//     border-radius: 0 4px 4px 0;
-//   }
-//   .user-text {
-//     flex: 1 auto;
-//     order: 2;
-//     padding: 0.2em 0.5em;
-//   }
-//   .badge {
-//     flex: 1 auto;
-//     order: 1;
-//     font-size: small;
-//     color: #ffffff;
-//     padding: 1.2em 1em 0em 1em;
-//     background-color: #607d8b;
-//     background-color: rgb(0, 120, 215);
-//     background-color: rgb(134, 183, 221);
-//     margin: 0em 0em 0em 0em;
-//     border-radius: 4px 0 0 4px;
-//     max-width: 1.5em;
-//   }
-// }
+  @import url('style.scss')
 </style>

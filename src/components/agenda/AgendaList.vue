@@ -5,11 +5,16 @@
         <button @click="getListOfAgendas">Refresh</button>
         <button @click="enableAddMode" v-if="!addingAgenda && !selectedAgenda">Add new event</button>
       </div>          
-      <el-table :data="agendas" stripe>
+      <el-table :data="agendas" stripe :default-sort = "{prop: 'start', order: 'ascending'}">
         <el-table-column prop="id" label="ID"></el-table-column>
+        <el-table-column prop="userId" label="Owner" :filters="getListOfOwners"
+      :filter-method="filterOwner"
+      filter-placement="bottom-end">
+          <template slot-scope="scope">{{scope.row.userId}}</template>
+        </el-table-column>
         <el-table-column prop="title" label="Title"></el-table-column>
         <el-table-column prop="description" label="Description"></el-table-column>
-        <el-table-column prop="start" label="Start time">
+        <el-table-column prop="start" sortable label="Start time">
           <template slot-scope="scope">
             {{ scope.row.start | formatDate }}
           </template>
@@ -19,7 +24,7 @@
             {{ scope.row.end | formatDate }}
           </template>
         </el-table-column>
-        <el-table-column prop="appointmentPlace" label="Appointment place"></el-table-column>
+        <el-table-column prop="appointmentPlace" label="Location"></el-table-column>
         <el-table-column label="Actions">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="deleteAgenda(scope.row)">Delete</el-button>
@@ -27,11 +32,11 @@
           </template>
         </el-table-column>
       </el-table>
-      <AgendaDetail
-          v-if="selectedAgenda || addingAgenda"
+      <agenda-detail
+          v-if="selectedAgenda || addingAgenda" :adding-agenda="addingAgenda"
           :agenda-model="selectedAgenda" :show-modal="showModal"
           @unselect="unselect"
-          @agendaChanged="agendaChanged"></AgendaDetail>
+          @agendaChanged="agendaChanged"></agenda-detail>
     </div>
   </transition>    
 </template>
@@ -41,7 +46,9 @@ import Vue from 'vue';
 import { Component, Prop, Watch } from 'vue-property-decorator';
 import AgendaDetail from './AgendaDetail.vue';
 import * as agendaTypes from '../../store/agenda/agenda-store-types'
+import * as userTypes from '../../store/user/user-store-types'
 import { Agenda } from '../agenda/agenda-model'
+import { User } from '../user/user-model'
 import { Getter, Mutation, Action } from 'vuex-class'
 import { AxiosResponse } from 'axios';
 import moment from 'moment'
@@ -70,6 +77,10 @@ export default class AgendaList extends Vue {
   @Action(agendaTypes.FETCH_AGENDAS) 
   storeListOfAgenda: () => Promise<AxiosResponse>;
   
+  @Getter(userTypes.GET_USERS) users: User[];
+  
+  @Action(userTypes.FETCH_USERS)
+  storeListOfUser: () => Promise<AxiosResponse>;
   @Action(agendaTypes.DELETE_AGENDA)
   storeDeleteAgenda: (param) => Promise<AxiosResponse>;
   
@@ -87,21 +98,52 @@ export default class AgendaList extends Vue {
     calendar
   }
 
-  created(){
-    this.storeListOfAgenda();
+  get getListOfOwners(): number[]{
+    return this.agendas.filter(a => a.id).map(a => a.userId);
+  }
+  filterOwner(value, row){
+    return row.userId == value;
+  }
+  created(){          
+    this.storeListOfAgenda().then(() => {
+      this.storeListOfUser().then(() => {
+        this.agendas.forEach(item => {
+          item.user = this.users.filter(usr => usr.id == item.userId)[0];
+        })
+        console.log(this.agendas);
+      });
+      
+    }); 
   }
 
   getListOfAgendas(){    
     return this.agendas;
   }
 
-  onSelect(index, row: Agenda) {
+  onSelect(index, row: Agenda) 
+  {
     this.selectedAgenda = row;
     this.showModal = true;
   }
 
-  deleteAgenda(agenda: Agenda) {    
-    this.storeDeleteAgenda(agenda);    
+  deleteAgenda(agenda: Agenda) {   
+    this.$confirm(`Are you sure you want to delete event ${agenda.title}?`, 'Warning', {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        }).then(() => {                    
+          this.storeDeleteAgenda(agenda).then(() => 
+            this.$message({
+              type: 'success',
+              message: 'Delete event completed'
+            })
+          )
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Delete event canceled'
+          });          
+        });    
   }
   
   enableAddMode() {
@@ -127,5 +169,5 @@ export default class AgendaList extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
+  @import 'style.scss'
 </style>

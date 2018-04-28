@@ -1,24 +1,39 @@
 <template>  
   <b-modal v-model="showModal" title="User Details" @ok="save" @cancel="clear" @hidden="clear">
-    <el-form label-position="left" label-width="150px">
+    <el-form :model="editingUser" ref="editingUser" label-position="left" label-width="120px">
       <el-form-item label="ID" v-if="!addingUser">
         <label class="value">{{editingUser.id}}</label>
       </el-form-item>
-      <el-form-item label="First name">
-        <el-input v-model="editingUser.firstName" ref="firstName" @keyup.enter="save"></el-input>
-      </el-form-item>
-      <el-form-item label="Last name">
-        <el-input v-model="editingUser.lastName" @keyup.enter="save"></el-input>
-      </el-form-item>
-      <el-form-item label="Email">
-        <el-input v-model="editingUser.email" @keyup.enter="save"></el-input>
-      </el-form-item>
-      <el-form-item label="Phone number">
-        <el-input v-model="editingUser.phoneNumber" @keyup.enter="save"></el-input>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item prop="firstName" label="First name" :rules="[{ required: true, message: 'Please input first name', trigger: 'blur'}]">
+                <el-input v-model="editingUser.firstName" ref="firstName" @keyup.enter="save"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item prop="lastName" label="Last name" :rules="[{ required: true, message: 'Please input last name', trigger: 'blur'}]">
+            <el-input v-model="editingUser.lastName" @keyup.enter="save"></el-input>   
+          </el-form-item>
+        </el-col>   
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item prop="email" label="Email" :rules="[
+              { required: true, message: 'Please input email address', trigger: 'blur' },
+              { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] }
+            ]">
+              <el-input v-model="editingUser.email" @keyup.enter="save" ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="Phone number">
+            <el-input v-model="editingUser.phoneNumber" @keyup.enter="save"></el-input>
+          </el-form-item>
+        </el-col>    
+      </el-row>  
       <el-form-item label="Address">
-        <el-input v-model="editingUser.address" @keyup.enter="save"></el-input>
-      </el-form-item>      
+        <el-input type="textarea" rows="4" v-model="editingUser.address" @keyup.enter="save"></el-input>
+      </el-form-item> 
     </el-form>
   </b-modal>
 </template>
@@ -79,19 +94,21 @@ export default class UserDetail extends Vue {
 
   setFocus() {
     this.$refs.firstName.focus();
-    // if (this.addingUser && this.editingUser) {
-    //   this.$refs.id.focus();
-    // } else {
-    //   this.$refs.firstName.focus();
-    // }
   }
 
   save() {
-    if (this.addingUser) {
-      this.addUser();
-    } else {
-      this.updateUser();
-    }
+    this.$refs['editingUser'].validate((valid) => {
+      if (valid) {
+        if (this.addingUser) {
+          this.addUser();
+        } else {
+          this.updateUser();
+        }
+      } else {
+        console.log('error submit!!');
+        return false;
+      }
+    });    
   }
   
   addUser() {
@@ -105,20 +122,4 @@ export default class UserDetail extends Vue {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.editarea {
-  float: left;
-  input {
-    margin: 4px;
-    height: 20px;
-    color: rgb(0, 120, 215);
-  }
-  button {
-    margin: 8px;
-  }
-  .editfields {
-    margin-left: 12px;
-  }
-}
-</style>
+<style lang="scss" scoped>@import url('style.scss');</style>

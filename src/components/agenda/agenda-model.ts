@@ -1,3 +1,5 @@
+import { User } from '../user/user-model'
+
 export class Agenda {
     id?: number;
     start?: string;
@@ -8,7 +10,7 @@ export class Agenda {
     appointmentPlaceY?: number;
     appointmentPlace?: string;
     userId: number;
-    userFullName: string;
+    user: User;
     constructor(agenda: any){
         this.id = agenda.id;
         this.start = agenda.start;
@@ -19,6 +21,10 @@ export class Agenda {
         this.appointmentPlaceX = agenda.appointmentPlaceX;
         this.appointmentPlaceY = agenda.appointmentPlaceY;   
         this.userId = agenda.userId; 
-        this.userFullName = agenda.userFullName;
+        this.user = agenda.user;        
+    }
+    
+    get allDay(): boolean {
+        return this.end == null;
     }
 }

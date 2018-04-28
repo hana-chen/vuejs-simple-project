@@ -1,27 +1,50 @@
 <template>
-    <b-modal v-model="showModal" title="Event Details" @ok="save" @cancel="clear" @hidden="clear">
-        <el-form label-position="left" label-width="150px">
-        <el-form-item label="ID" v-if="!addingAgenda">
-            <label class="value">{{editingAgenda.id}}</label>
-        </el-form-item>
-        <el-form-item label="Title">
-            <el-input v-model="editingAgenda.title" ref="title" @keyup.enter="save"></el-input>
-        </el-form-item>      
-        <el-form-item label="Owners">
-            <el-select v-model="editingAgenda.userId">
-                <el-option v-for="item in users" :key="item.id" :value="item.firstName"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="Description">
-            <el-input type="textarea" v-model="editingAgenda.description" @keyup.enter="save"></el-input>
-        </el-form-item>
-        <el-form-item label="Start time">
-            <el-date-picker type="datetime" format="yyyy/MM/dd hh:mm A" value-format="yyyy-MM-dd hh:mm A" default-time="12:00:00" placeholder="Pick a date" v-model="editingAgenda.start" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="End time">
-            <el-date-picker type="datetime" format="yyyy/MM/dd hh:mm A" value-format="yyyy-MM-dd hh:mm A" default-time="12:00:00" placeholder="Pick a date" v-model="editingAgenda.end" style="width: 100%;"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="Appointment place">            
+    <el-dialog width="70%" :visible.sync="showModal" title="Event Details" @close="clear">
+        <el-form label-position="left" label-width="100px">        
+        <el-row :gutter="20">
+            <el-col :span="16">                
+                <el-form-item label="Title">
+                    <el-input v-model="editingAgenda.title" ref="title" @keyup.enter="save"></el-input>
+                </el-form-item>     
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="ID" v-if="!addingAgenda">
+                    <label class="value">{{editingAgenda.id}}</label>
+                </el-form-item>
+            </el-col>
+        </el-row>        
+        <el-row :gutter="20">
+            <el-col :span="16">
+                <el-form-item label="Description">
+                    <el-input type="textarea" v-model="editingAgenda.description" @keyup.enter="save"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="Owners">
+                    <el-select v-model="editingAgenda.userId" >
+                        <el-option v-for="item in users" :key="item.id" :value="item.id" :label="item.firstName"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row> 
+        <el-row>
+            <el-form-item label="All day event">
+                <el-switch :value="!editingAgenda.end" disabled></el-switch>
+            </el-form-item>
+        </el-row>       
+        <el-row>
+            <el-form-item label="Event time">            
+                <el-col :span="11">
+                    <el-date-picker type="datetime" format="yyyy/MM/dd hh:mm A" value-format="yyyy-MM-dd hh:mm A" default-time="12:00:00" placeholder="Pick a date" v-model="editingAgenda.start" style="width: 100%;"></el-date-picker>        
+                </el-col>
+                <el-col class="text-center" :span="2">-</el-col>
+                <el-col :span="11">
+                    <el-date-picker type="datetime" format="yyyy/MM/dd hh:mm A" value-format="yyyy-MM-dd hh:mm A" default-time="12:00:00" placeholder="Pick a date" v-model="editingAgenda.end" style="width: 100%;"></el-date-picker>        
+                </el-col>
+            </el-form-item>
+        </el-row>
+                                         
+        <el-form-item label="Location">            
             <gmap-autocomplete class="el-input__inner" @place_changed="setPlace" v-model="editingAgenda.appointmentPlace"></gmap-autocomplete>         
             <input hidden v-model="editingAgenda.appointmentPlaceX"/>
             <input hidden v-model="editingAgenda.appointmentPlaceY"/>
@@ -38,7 +61,11 @@
         </el-form-item>         
         
         </el-form>
-    </b-modal>
+        <template slot="footer">
+            <el-button @click="clear">Cancel</el-button>
+            <el-button type="primary" @click="save">Save</el-button>
+        </template>
+    </el-dialog>
 </template>
 
 <script lang="ts">
@@ -70,21 +97,29 @@ export default class AgendaDetail extends Vue {
     endDay: any;
 
     created() {
-        this.editingAgenda = this.cloneIt();        
+        this.editingAgenda = this.cloneIt();
         this.showModal = true;
         this.markers = [];
         this.places = [];
         this.currentPlace = null;
-        if(!this.addingAgenda && this.editingAgenda){            
-            this.center = {
+        if(!this.addingAgenda && this.editingAgenda){ 
+            if(this.editingAgenda.appointmentPlaceX)       
+            {
+                this.center = {
                 lat: this.editingAgenda.appointmentPlaceX,
                 lng: this.editingAgenda.appointmentPlaceY
+                }
+                const marker = {
+                    lat: this.editingAgenda.appointmentPlaceX,
+                    lng: this.editingAgenda.appointmentPlaceY
+                }
+                this.markers.push({ position: marker });
+            }else{
+                this.center = {
+                    lat: 45.508,
+                    lng: -73.587
+                }
             }
-            const marker = {
-                lat: this.editingAgenda.appointmentPlaceX,
-                lng: this.editingAgenda.appointmentPlaceY
-            }
-            this.markers.push({ position: marker });
         }else{
             this.center = {
                 lat: 45.508,

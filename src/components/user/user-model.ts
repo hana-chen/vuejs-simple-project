@@ -1,12 +1,15 @@
 export class User {
     id: number;
     firstName: string;
-    className: string;
+    lastName: string;
     email: string;
     username: string;
     password: string;
     phoneNumber: string;
     address: string;
-    constructor(){        
+    constructor(){
+    }
+    get fullName():string{
+        return this.firstName + ' ' + this.lastName;
     }
 }

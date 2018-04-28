@@ -1,7 +1,11 @@
 <template>
   <div class="container">    
     <button @click="refreshEvents">Refresh</button>
-    <button @click="removeEvent">Remove</button>
+    <pre></pre>
+    <el-select v-model="selectedUser" @change="refreshEvents" clearable filterable multiple>
+        <el-option v-if="selectedUser == null" disabled :value="null">Select an option</el-option>
+        <el-option v-for="item in users" :key="item.id" :value="item.id" :label="item.firstName"></el-option>
+    </el-select>
     <pre></pre>
     <div ref="calendar" id="calendar"></div>
     <!-- <full-calendar ref="calendar" @event-selected="eventSelected" :config="config" :events="events"/> -->
@@ -41,7 +45,7 @@ Vue.use(elementUI)
 })
 export default class AgendaCalendar extends Vue {
   eventItems: any = null;
-  
+  selectedUser: any = null;
   @Getter(userTypes.GET_USERS) users: User[];
   
   @Getter(agendaTypes.GET_AGENDAS) agendas: Agenda[];
@@ -61,14 +65,14 @@ export default class AgendaCalendar extends Vue {
   @Action(agendaTypes.ADD_AGENDA)
   storeAddAgenda: (param) => Promise<AxiosResponse>;
 
-  addingAgenda = false;
+  addingAgenda: boolean = false;
   selectedAgenda: Agenda | null = null;
-  showModal: boolean;
+  showModal: boolean = false;
 
   $refs: {
     calendar
   }
-
+ 
   isPast(date){
     let today = moment().format();
     return moment(today).isAfter(date);
@@ -76,7 +80,7 @@ export default class AgendaCalendar extends Vue {
   mounted(){
     $('#calendar').fullCalendar({
       header: {left: 'addEventButton', center: 'agendaDay,agendaWeek,month,list'},
-      defaultView: 'month',
+      defaultView: 'agendaWeek',
       editable: true,
       eventLimit: true,
       views: {
@@ -89,7 +93,7 @@ export default class AgendaCalendar extends Vue {
           {
             this.eventItems = [];
             this.eventItems.push(...this.agendas)
-            callback(this.eventItems);
+            callback(this.eventItems);            
           }
         );      
       },
@@ -113,25 +117,47 @@ export default class AgendaCalendar extends Vue {
           }
         }
       },
-      eventRender: (event, element) => {        
-        // element.qtip({
-        //   content: event.description
-        // })
-        //console.log(event);
-        //<p class="type-${ event.userId }">#${ event.userFullName }</p>
+      eventRender: (event, element, view) => {  
+        if(this.users)  
+        {
+          event.user = this.users.filter(u => u.id == event.userId)[0]; 
+        }
         var startD = moment(event.start).format('hh:mm A');
         var endD = moment(event.start).format('hh:mm A');
         element.find( '.fc-content' ).html(
-        `<h4>${startD} - ${ event.title }</h4>
+        `<i class="el-icon el-icon-close"></i>
+         <h4>${startD} - ${ event.title }</h4>
          <p class="guest-count">${ event.appointmentPlace } Guests</p>   
-         
+         <p>${event.user.firstName} ${event.user.lastName}</p> 
         `
         );
+        var _self = this;
+        element.find(".el-icon-close").click(function() {
+            _self.showModal = false;
+            _self.selectedAgenda = new Agenda(event);
+            $('#calendar').fullCalendar('removeEvents', event._id);
+            setTimeout(() => {
+              _self.storeDeleteAgenda(_self.selectedAgenda);
+            }, 100);            
+        });
+        var display = true;
+        if(this.selectedUser.length > 0)
+        {
+          //single select
+          //return ['all', event.userId].indexOf(this.selectedUser) >= 0
+          display = display && this.selectedUser.indexOf(event.userId) >= 0
+        }
+
+        return display;
       },
       eventClick: (event, jsEvent, view) => {
         event.source = null;
         event.start = moment(event.start).format('YYYY-MM-DD hh:mm a');
-        event.end = moment(event.end).format('YYYY-MM-DD hh:mm a');
+        if(event.end)
+        {  
+          event.end = moment(event.end).format('YYYY-MM-DD hh:mm a');
+        }
+        
         this.selectedAgenda = event;
         this.showModal = true;
       }
@@ -139,11 +165,18 @@ export default class AgendaCalendar extends Vue {
   }
   created(){
     this.eventItems = [];
+    this.selectedUser = [];
     this.storeListOfUser();
+    this.showModal = false;
+    this.addingAgenda = false;    
   }
 
   getListOfAgendas(){    
     return this.agendas;
+  }
+
+  getListOfUsers(){
+    return this.users;
   }
 
   refreshEvents() {
